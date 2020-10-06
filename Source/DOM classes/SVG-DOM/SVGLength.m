@@ -4,7 +4,6 @@
 #import "CSSPrimitiveValue_ConfigurablePixelsPerInch.h"
 
 #import "SVGUtils.h"
-#import "SVGKDefine_Private.h"
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -210,8 +209,7 @@ static float cachedDevicePixelsPerInch;
 	|| [platform hasPrefix:@"iPad5,3"]
     || [platform hasPrefix:@"iPad5,4"]
 	|| [platform hasPrefix:@"iPad6"]
-    || [platform hasPrefix:@"iPad7"]
-    || [platform hasPrefix:@"iPad8"])
+    || [platform hasPrefix:@"iPad7"])
 		return 264.0f;
     
 	if( [platform hasPrefix:@"iPad"]) // catch-all for higher-end devices not yet existing
@@ -228,15 +226,8 @@ static float cachedDevicePixelsPerInch;
         NSAssert(FALSE, @"Update your source code or disable assertions: you are using an iWatch that didn't exist when this code was written, we have no idea what the pixel count per inch is!");
         return 326.0f;
     }
-	
-	if( [platform hasPrefix:@"x86_64"])
-	{
-		SVGKitLogWarn(@"[%@] WARNING: you are running on the simulator; it's impossible for us to calculate centimeter/millimeter/inches units correctly", [self class]);
-		return 132.0f; // Simulator, running on desktop machine
-	}
-	
-	NSAssert(FALSE, @"Cannot determine the PPI values for current device; returning 0.0f - hopefully this will crash your code (you CANNOT run SVG's that use CM/IN/MM etc until you fix this)" );
-	return 0.0f; // Bet you'll get a divide by zero here...
+    
+    return UIScreen.mainScreen.scale * 160.0f;
 }
 
 @end
